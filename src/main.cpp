@@ -8,6 +8,7 @@
 #include "behavior_planner.h"
 #include "helpers.h"
 #include "json.hpp"
+#include "vehicle.h"
 
 // for convenience
 using nlj = nlohmann::json;
@@ -79,12 +80,9 @@ int main()
                             // j[1] is the data JSON object
 
                             // Main car's localization Data
-                            double car_x = j[1]["x"];
-                            double car_y = j[1]["y"];
-                            double car_s = j[1]["s"];
-                            double car_d = j[1]["d"];
-                            double car_yaw = j[1]["yaw"];
-                            double car_speed = j[1]["speed"];
+                            vehicle v(j[1]["x"], j[1]["y"],
+                                      j[1]["s"], j[1]["d"],
+                                      j[1]["yaw"], j[1]["speed"]);
 
                             // Previous path data given to the Planner
                             auto previous_path_x = j[1]["previous_path_x"];
@@ -99,7 +97,7 @@ int main()
 
                             const auto&[next_x_vals, next_y_vals] =
                                 bhvr_planner.get_trajectory(sensor_fusion,
-                                        {car_x, car_y, car_s, car_d, car_yaw, car_speed},
+                                        v,
                                         {previous_path_x, previous_path_y},
                                         {end_path_s, end_path_d});
 
