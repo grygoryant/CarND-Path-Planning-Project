@@ -346,16 +346,12 @@ double collision_cost(const sensor_fusion_data_t &sf_data,
     for(const auto& v : sf_data)
     {
         double check_car_s = v[5];
-        if(check_car_s - curr_state.s() < 30)
+        if(check_car_s - curr_state.s() < 40)
         {
-            double vx = v[3];
-            double vy = v[4];
-
-            double speed = sqrt(vx * vx + vy * vy);
-            vehicle veh(v[1], v[2], v[5], v[6], 0, speed);
+            vehicle veh(v[1], v[2], v[5], v[6], 0, 0);
             if(veh.get_cur_lane() == dst_lane)
             {
-                return 20;
+                return 1;
             }
         }
     }
@@ -392,8 +388,8 @@ double behavior_planner::calculate_cost(const sensor_fusion_data_t &sf_data,
     }
 
     auto cost = inefficiency_cost(49.5, sf_data, curr_state,
-            curr_state.get_cur_lane(), dst_lane) + 99999 * lane_cost(dst_lane) +
-            99 * collision_cost(sf_data, curr_state, curr_state.get_cur_lane(), dst_lane) +
+            curr_state.get_cur_lane(), dst_lane) + 9999999 * lane_cost(dst_lane) +
+            9999 * collision_cost(sf_data, curr_state, curr_state.get_cur_lane(), dst_lane) +
             5 * lane_emptyness_cost(sf_data, curr_state, dst_lane);
 
     return cost;
