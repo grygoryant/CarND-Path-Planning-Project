@@ -28,13 +28,14 @@ const std::map<action, std::vector<action>> action_adjacency =
 //                {action::LCR,  {action::KL, action::LCR}},
 //                {action::PLCL, {action::KL, action::LCL,  action::PLCL}},
 //                {action::PLCR, {action::KL, action::LCR,  action::PLCR}}
+
                 {action::KL,   {action::KL, action::LCL, action::LCR}},
                 {action::LCL,  {action::KL, action::LCL}},
                 {action::LCR,  {action::KL, action::LCR}},
         };
 
-const std::map<action, int> lane_direction = {{action::PLCL, 1}, {action::LCL, 1},
-                                   {action::LCR, -1}, {action::PLCR, -1}};
+const std::map<action, int> lane_direction = {{action::PLCL, -1}, {action::LCL, -1},
+                                   {action::LCR, 1}, {action::PLCR, 1}};
 
 class behavior_planner
 {

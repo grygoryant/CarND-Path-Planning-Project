@@ -133,7 +133,7 @@ std::tuple<int, trajectory_t> behavior_planner::kl_trajectory(const sensor_fusio
 
             check_car_s += static_cast<double>(prev_size) * 0.02 * check_speed;
 
-            if((check_car_s > car_s) && (check_car_s - car_s) < 30)
+            if((check_car_s > car_s) && (check_car_s - car_s) < 25)
             {
                 too_close = true;
                 target_vel = check_speed;
@@ -142,11 +142,11 @@ std::tuple<int, trajectory_t> behavior_planner::kl_trajectory(const sensor_fusio
         }
     }
 
-    if(too_close && curr_state.speed() > target_vel)
+    if(too_close && m_ref_vel > target_vel)
     {
         m_ref_vel -= 0.224;
     }
-    else if((too_close && m_ref_vel < target_vel) ||
+    else if((too_close && m_ref_vel <= target_vel) ||
             m_ref_vel < 49.5)
     {
         m_ref_vel += 0.224;
@@ -224,7 +224,7 @@ trajectory_t behavior_planner::get_trajectory_points(int target_lane,
         pts_y.emplace_back(ref_y);
     }
 
-    auto next_wp0 = getXY(curr_state.s() + 30, (2 + 4 * target_lane), m_map_waypoints_s,
+    auto next_wp0 = getXY(curr_state.s() + 50, (2 + 4 * target_lane), m_map_waypoints_s,
                           m_map_waypoints_x, m_map_waypoints_y);
     auto next_wp1 = getXY(curr_state.s() + 60, (2 + 4 * target_lane), m_map_waypoints_s,
                           m_map_waypoints_x, m_map_waypoints_y);
@@ -392,8 +392,8 @@ double behavior_planner::calculate_cost(const sensor_fusion_data_t &sf_data,
     }
 
     auto cost = inefficiency_cost(49.5, sf_data, curr_state,
-            curr_state.get_cur_lane(), dst_lane) + 999 * lane_cost(dst_lane) +
-            10 * collision_cost(sf_data, curr_state, curr_state.get_cur_lane(), dst_lane) +
+            curr_state.get_cur_lane(), dst_lane) + 99999 * lane_cost(dst_lane) +
+            99 * collision_cost(sf_data, curr_state, curr_state.get_cur_lane(), dst_lane) +
             5 * lane_emptyness_cost(sf_data, curr_state, dst_lane);
 
     return cost;
